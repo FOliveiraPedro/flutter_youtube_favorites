@@ -38,7 +38,13 @@ dependencies:
   bloc_pattern: ^3.0.0+1
   dartz: ^0.10.1
   dio: ^4.0.6
+  equatable: ^2.0.3
+  flutter_dotenv: ^5.0.2
+  flutter_localizations:
+    sdk: flutter
   flutter_modular: ^4.5.1+1
+  get: 4.6.1
+  intl: ^0.17.0
   pretty_dio_logger: ^1.1.1
   rxdart: ^0.27.3
   shared_preferences: ^2.0.15
@@ -66,8 +72,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - lib/ui/assets/images/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
