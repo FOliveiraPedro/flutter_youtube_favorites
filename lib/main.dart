@@ -1,20 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
-import 'package:flutter_youtube_favorites/app_module.dart';
-import 'package:flutter_youtube_favorites/app_widget.dart';
+import 'package:intl/intl.dart';
+
+import 'main/app.dart';
 
 void main() {
-  runApp(const FLutterTube());
-}
+  WidgetsFlutterBinding.ensureInitialized();
 
-class FLutterTube extends StatelessWidget {
-  const FLutterTube({Key? key}) : super(key: key);
+  Intl.defaultLocale = 'pt_BR';
 
-  @override
-  Widget build(BuildContext context) {
-    return ModularApp(
-      module: AppModule(),
-      child: AppWidget(),
-    );
-  }
+  runApp(App());
 }
