@@ -17,22 +17,16 @@ class VideoModel extends Equatable {
       required this.channel});
 
   factory VideoModel.fromJson({required final Json json}) {
-    if (json.keys.toSet().containsAll([
-      'items',
-    ])) {
       try {
         return VideoModel(
-          id: "",
-          channel: "",
-          thumb: "",
-          title: "",
+          id: json['id']['videoId'],
+          channel: json['snippet']['channelTitle'],
+          thumb: json['snippet']['thumbnails']['high']['url'],
+          title: json['snippet']['title'],
         );
       } on ModelError {
         throw ModelError.remoteParseData(message: 'Erro ao buscar o video!');
       }
-    } else {
-      throw ModelError.remoteInvalidData(message: 'Erro ao buscar o video!');
-    }
   }
 
   VideoEntity toEntity() => VideoEntity(

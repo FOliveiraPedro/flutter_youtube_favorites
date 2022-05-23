@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_youtube_favorites/domain/entities/entities.dart';
+import 'package:flutter_youtube_favorites/ui/pages/home/components/video_tile.dart';
 
+import '../../../data/models/models.dart';
 import '../../mixins/mixins.dart';
 import '../pages.dart';
 import 'components/components.dart';
@@ -22,14 +25,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    widget.presenter.getVideos('gatos');
     _customScrollViewController = ScrollController();
   }
 
   @override
   Widget build(final BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Container(
+          title: SizedBox(
             height: 25,
             child: Image.asset('lib/ui/assets/images/yt_logo_rgb_dark.png'),
           ),
@@ -41,25 +43,47 @@ class _HomePageState extends State<HomePage> {
               child: Text("0"),
             ),
             IconButton(onPressed: () {}, icon: const Icon(Icons.star)),
-            IconButton(onPressed: () {
-              showSearch(context: context, delegate: DataSearch());
-            }, icon: const Icon(Icons.search))
+            IconButton(
+                onPressed: () async {
+                  String? result = await showSearch(
+                      context: context,
+                      delegate: DataSearch(presenter: widget.presenter));
+                  widget.presenter.getVideos(result!);
+                },
+                icon: const Icon(Icons.search))
           ],
         ),
+        backgroundColor: Colors.black87,
         body: Padding(
-          padding: MediaQuery.of(context).viewPadding,
-          child: CustomScrollView(
-            controller: _customScrollViewController,
-            physics: const BouncingScrollPhysics(),
-            slivers: const [
-              SliverPadding(
-                padding: EdgeInsets.all(24),
-                sliver: SliverToBoxAdapter(
-                  child: Text('Home Page'),
-                ),
-              ),
-            ],
-          ),
-        ),
+            padding: MediaQuery.of(context).viewPadding,
+            child: StreamBuilder<List<VideoModel>>(
+              stream: widget.presenter.videoResultsStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                    itemBuilder: (context, index) {
+                      if(index < snapshot.data!.length) {
+                        return VideoTile(video: snapshot.data![index]);
+                      }else if(index > 1){
+                        widget.presenter.nextPageVideos();
+                        return Container(
+                          height: 40,
+                          width: 40,
+                          alignment: Alignment.center,
+                          child: const CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                          ),
+                        );
+                      } else {
+                        return Container();
+                      }
+                    },
+                    itemCount: snapshot.data!.length+1,
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            )),
       );
 }

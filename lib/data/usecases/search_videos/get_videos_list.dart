@@ -12,8 +12,11 @@ class GetVideosList implements GetVideosListUseCase {
 
   GetVideosList({required this.client, required this.url});
 
+  String? _text;
+  String? _nextPageToken;
   @override
-  Future<List<VideoEntity>> call({required final String text}) async {
+  Future<List<VideoModel>> call({required final String text}) async {
+    _text = text;
     try {
       var result =
           await client.request(url: url, method: Method.get, queryParameters: {
@@ -22,8 +25,9 @@ class GetVideosList implements GetVideosListUseCase {
         'key': 'AIzaSyDEnfDiLGkMPW4MF4AyzDpYcF3QjQfj530',
         'maxResults': '10'
       });
-      print(result['items']);
-      List<VideoEntity> list = result['items'].map<VideoModel>((map) {
+
+      _nextPageToken = result['nextPageToken'];
+      List<VideoModel> list = result['items'].map<VideoModel>((map) {
         return VideoModel.fromJson(json: map);
       }).toList();
       return list;
@@ -31,6 +35,32 @@ class GetVideosList implements GetVideosListUseCase {
       throw error.toDomainError();
     } on ModelError catch (error) {
       throw error.toDomainError();
+    }catch (error){
+      throw error;
+    }
+  }
+
+  @override
+  Future<List<VideoModel>> nextPage() async {
+    try {
+      var result =
+          await client.request(url: url, method: Method.get, queryParameters: {
+        'q': _text,
+        'type': 'video',
+        'key': 'AIzaSyDEnfDiLGkMPW4MF4AyzDpYcF3QjQfj530',
+        'maxResults': '10'
+      });
+      _nextPageToken = result['nextPageToken'];
+      List<VideoModel> list = result['items'].map<VideoModel>((map) {
+        return VideoModel.fromJson(json: map);
+      }).toList();
+      return list;
+    } on CacheError catch (error) {
+      throw error.toDomainError();
+    } on ModelError catch (error) {
+      throw error.toDomainError();
+    }catch (error){
+      throw error;
     }
   }
 }
