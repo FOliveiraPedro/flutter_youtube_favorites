@@ -1,10 +1,8 @@
-import 'package:flutter_youtube_favorites/domain/entities/entities.dart';
 import 'package:flutter_youtube_favorites/domain/helpers/helpers.dart';
 
 import '../../../domain/usecases/usecases.dart';
 import '../../errors/errors.dart';
 import '../../http/http.dart';
-import '../../models/models.dart';
 
 class SuggestionList implements SuggestionsListUseCase {
   final HttpClient client;

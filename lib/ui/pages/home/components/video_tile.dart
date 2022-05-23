@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_youtube_favorites/data/models/models.dart';
+
+import '../../../../data/models/models.dart';
 
 class VideoTile extends StatelessWidget {
   final VideoModel video;

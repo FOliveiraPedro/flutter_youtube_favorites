@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_youtube_favorites/ui/pages/home/home.dart';
+
+import '../home.dart';
 
 class DataSearch extends SearchDelegate<String> {
   final HomePresenter presenter;

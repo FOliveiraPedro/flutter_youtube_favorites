@@ -1,5 +1,3 @@
-import 'package:flutter_youtube_favorites/domain/entities/entities.dart';
-import 'package:flutter_youtube_favorites/presentation/mixins/ui_error_manager.dart';
 import 'package:get/get.dart';
 
 import '../../../data/models/models.dart';
@@ -7,6 +5,7 @@ import '../../../domain/helpers/helpers.dart';
 import '../../../domain/usecases/usecases.dart';
 import '../../helpers/helpers.dart';
 import '../../../ui/pages/pages.dart';
+import '../../mixins/mixins.dart';
 
 class GetxHomePresenter extends GetxController with UIErrorManager implements HomePresenter {
   final GetVideosListUseCase getVideosListUseCase;
