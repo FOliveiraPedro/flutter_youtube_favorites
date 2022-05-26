@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_youtube_favorites/domain/entities/entities.dart';
 import 'package:flutter_youtube_favorites/ui/pages/home/components/video_tile.dart';
+import 'package:get/get.dart';
 
 import '../../../data/models/models.dart';
 import '../../mixins/mixins.dart';
@@ -38,11 +39,22 @@ class _HomePageState extends State<HomePage> {
           elevation: 0,
           backgroundColor: Colors.black87,
           actions: [
-            const Align(
+            Align(
               alignment: Alignment.center,
-              child: Text("0"),
+              child: StreamBuilder<Map<String,VideoModel>>(
+                  stream: widget.presenter.favoriteListStream,
+                  builder: (context, snapshot) {
+                    if(snapshot.hasData){
+                      return Text("${snapshot.data!.length}");
+                    }else{
+                      return Container();
+                    }
+                  }
+              ),
             ),
-            IconButton(onPressed: () {}, icon: const Icon(Icons.star)),
+            IconButton(onPressed: () {
+              Get.toNamed('/favorites',arguments: widget.presenter.favorites);
+            }, icon: const Icon(Icons.star)),
             IconButton(
                 onPressed: () async {
                   String? result = await showSearch(
@@ -63,7 +75,7 @@ class _HomePageState extends State<HomePage> {
                   return ListView.builder(
                     itemBuilder: (context, index) {
                       if(index < snapshot.data!.length) {
-                        return VideoTile(video: snapshot.data![index]);
+                        return VideoTile(video: snapshot.data![index],presenter: widget.presenter,);
                       }else if(index > 1){
                         widget.presenter.nextPageVideos();
                         return Container(

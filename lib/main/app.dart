@@ -44,6 +44,12 @@ class App extends StatelessWidget {
           page: makeHomePage,
           title: 'Inicio',
         ),
+        GetPage(
+          name: '/favorites',
+          page: makeFavoritePage,
+          title: 'Favoritos',
+
+        ),
       ],
     );
   }

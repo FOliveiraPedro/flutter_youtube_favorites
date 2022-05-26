@@ -10,32 +10,50 @@ class VideoModel extends Equatable {
   final String thumb;
   final String channel;
 
-  const VideoModel(
-      {required this.id,
-      required this.title,
-      required this.thumb,
-      required this.channel});
+  const VideoModel({required this.id,
+    required this.title,
+    required this.thumb,
+    required this.channel});
 
   factory VideoModel.fromJson({required final Json json}) {
-      try {
+    try {
+      if(json.containsKey('id')) {
         return VideoModel(
           id: json['id']['videoId'],
           channel: json['snippet']['channelTitle'],
           thumb: json['snippet']['thumbnails']['high']['url'],
           title: json['snippet']['title'],
         );
-      } on ModelError {
-        throw ModelError.remoteParseData(message: 'Erro ao buscar o video!');
+      }else{
+        return VideoModel(
+            id: json['videoId'],
+            channel: json['channel'],
+            thumb: json['thumb'],
+            title: json['title']
+        );
       }
+    } on ModelError {
+      throw ModelError.remoteParseData(message: 'Erro ao buscar o video!');
+    }
   }
 
-  VideoEntity toEntity() => VideoEntity(
-    id: "",
-    channel: "",
-    thumb: "",
-    title: "",
+  Map<String, dynamic> toJson() {
+    return {
+      'videoId': id,
+      'title': title,
+      'thumb': thumb,
+      'channel': channel
+    };
+  }
+
+  VideoEntity toEntity() =>
+      VideoEntity(
+        id: "",
+        channel: "",
+        thumb: "",
+        title: "",
       );
 
   @override
-  List<Object> get props => [id,title,thumb, channel];
+  List<Object> get props => [id, title, thumb, channel];
 }

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../../../data/models/models.dart';
+import '../../pages.dart';
 
 class VideoTile extends StatelessWidget {
   final VideoModel video;
+  final HomePresenter presenter;
 
-  const VideoTile({Key? key, required this.video}) : super(key: key);
+  const VideoTile({Key? key, required this.video, required this.presenter})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +46,25 @@ class VideoTile extends StatelessWidget {
                   ),
                 ],
               )),
-              IconButton(
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.star_border,
-                    color: Colors.white,
-                    size: 30,
-                  ))
+              StreamBuilder<Map<String,VideoModel>>(
+                  stream: presenter.favoriteListStream,
+                  initialData: {},
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return IconButton(
+                          onPressed: () {
+                            presenter.toggleFavorite(video);
+                          },
+                          icon:  Icon(
+                            snapshot.data!.containsKey(video.id)?
+                            Icons.star:Icons.star_border,
+                            color: Colors.white,
+                            size: 30,
+                          ));
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  })
             ],
           )
         ],
